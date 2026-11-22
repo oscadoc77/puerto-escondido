@@ -189,6 +189,11 @@ const buscador = document.getElementById('buscador');
 let reservasCache = [];
 let modoTodas = false;
 
+// Escapa cualquier dato que venga de la base de datos antes de insertarlo en HTML
+function esc(v) {
+  return String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 function fechaLocalHoy() {
   const d = new Date();
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
@@ -223,6 +228,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 });
 
 document.getElementById('logoutBtn').addEventListener('click', async () => {
+  if (canalTiempoReal) { db.removeChannel(canalTiempoReal); canalTiempoReal = null; }
   await db.auth.signOut();
   verificarSesion();
 });
@@ -258,8 +264,8 @@ function renderizar() {
     if (!q) return true;
     return (
       r.folio.toLowerCase().includes(q) ||
-      r.clientes?.nombre.toLowerCase().includes(q) ||
-      r.clientes?.telefono.includes(q)
+      r.clientes?.nombre?.toLowerCase().includes(q) ||
+      r.clientes?.telefono?.includes(q)
     );
   });
 
@@ -283,29 +289,29 @@ function renderizar() {
     return `
       <div class="res-card">
         <div class="hora-box">
-          <div>${r.hora.slice(0,5)}</div>
-          <small>${r.fecha}</small>
+          <div>${esc(r.hora).slice(0,5)}</div>
+          <small>${esc(r.fecha)}</small>
         </div>
 
         <div>
-          <strong style="font-size:1.05rem;">${c.nombre || 'Cliente'}</strong> ${badge}
+          <strong style="font-size:1.05rem;">${esc(c.nombre || 'Cliente')}</strong> ${badge}
           <div class="mono" style="font-size:0.8rem; color:var(--ink-soft); margin-top:4px;">
-            ${r.folio} · ${r.personas} pers. · Tel: <a href="tel:${c.telefono}">${c.telefono}</a>
+            ${esc(r.folio)} · ${esc(r.personas)} pers. · Tel: <a href="tel:${esc(c.telefono)}">${esc(c.telefono)}</a>
           </div>
-          ${r.notas_reserva ? `<div class="nota-box">Nota reserva: "${r.notas_reserva}"</div>` : ''}
-          ${c.notas_permanentes ? `<div class="nota-box" style="color:var(--blue)">Historial cliente: "${c.notas_permanentes}"</div>` : ''}
+          ${r.notas_reserva ? `<div class="nota-box">Nota reserva: "${esc(r.notas_reserva)}"</div>` : ''}
+          ${c.notas_permanentes ? `<div class="nota-box" style="color:var(--blue)">Historial cliente: "${esc(c.notas_permanentes)}"</div>` : ''}
         </div>
 
         <div>
           <label class="mono" style="font-size:0.68rem; color:var(--ink-soft);">MESA ASIGNADA</label>
-          <input class="control-inline" type="text" value="${r.mesa_asignada}"
-            placeholder="Ej. Mesa 4, Terraza..."
-            onchange="actualizarReserva('${r.id}', { mesa_asignada: this.value })">
+          <input class="control-inline" type="text" value="${esc(r.mesa_asignada)}"
+            data-id="${esc(r.id)}" data-campo="mesa_asignada"
+            placeholder="Ej. Mesa 4, Terraza...">
         </div>
 
         <div>
           <label class="mono" style="font-size:0.68rem; color:var(--ink-soft);">ESTATUS</label>
-          <select class="control-inline" onchange="actualizarReserva('${r.id}', { estado: this.value })">
+          <select class="control-inline" data-id="${esc(r.id)}" data-campo="estado">
             <option value="pendiente"  ${r.estado==='pendiente'?'selected':''}>🟡 Pendiente</option>
             <option value="confirmada" ${r.estado==='confirmada'?'selected':''}>🔵 Confirmada</option>
             <option value="en_mesa"    ${r.estado==='en_mesa'?'selected':''}>🟢 Ya en mesa</option>
@@ -318,13 +324,26 @@ function renderizar() {
   }).join('');
 }
 
-window.actualizarReserva = async (id, cambios) => {
-  await db.from('reservaciones').update(cambios).eq('id', id);
-};
+async function actualizarReserva(id, cambios) {
+  const { error } = await db.from('reservaciones').update(cambios).eq('id', id);
+  if (error) {
+    alert('No se pudo guardar el cambio. Revisa la conexión e inténtalo de nuevo.');
+    cargarReservaciones();
+  }
+}
+
+// Un solo listener para todos los controles de la lista
+document.getElementById('listaReservas').addEventListener('change', (e) => {
+  const el = e.target;
+  if (!el.dataset || !el.dataset.id) return;
+  actualizarReserva(el.dataset.id, { [el.dataset.campo]: el.value });
+});
 
 // Actualización automática en tiempo real cuando cae una reserva nueva
+let canalTiempoReal = null;
 function suscribirTiempoReal() {
-  db.channel('cambios-reservas')
+  if (canalTiempoReal) return;
+  canalTiempoReal = db.channel('cambios-reservas')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'reservaciones' }, () => {
       cargarReservaciones();
     })
