@@ -115,15 +115,13 @@ form.addEventListener('submit', async (e) => {
     `https://wa.me/${WHATSAPP_NEGOCIO}?text=${encodeURIComponent(texto)}`;
 
   const primerNombre = nombre.split(' ')[0];
+  // La función ya no indica si el cliente vino antes (no revela datos de otros clientes)
   document.getElementById('confirmName').textContent =
-    data && data.visitas > 1
-      ? `¡Qué gusto verte de nuevo, ${primerNombre}!`
-      : `¡Listo, ${primerNombre}! Tu mesa quedó registrada.`;
+    `¡Listo, ${primerNombre}! Tu mesa quedó registrada.`;
 
   document.getElementById('confirmDetails').textContent =
     `Mesa para ${personas} · ${fecha} a las ${hora}`;
-  document.getElementById('confirmFolio').textContent =
-    `Folio ${folioActual}` + (data && data.visitas > 1 ? ` · Visita #${data.visitas}` : '');
+  document.getElementById('confirmFolio').textContent = `Folio ${folioActual}`;
 
   form.classList.add('hidden');
   confirmBlock.classList.add('show');
