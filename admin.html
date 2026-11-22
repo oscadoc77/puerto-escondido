@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Control — Puerto Escondido</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --paper: #F1EBDC;
+    --ink: #122A32;
+    --ink-soft: #4C6169;
+    --blue: #0C6B86;
+    --gold: #D9A13C;
+    --dark: #083A4B;
+    --warn: #B5503B;
+    --ok: #2E7D5B;
+    --line: rgba(18,42,50,0.16);
+    --radius: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--paper); color: var(--ink); font-family: 'Work Sans', sans-serif; }
+  h1, h2, h3 { font-family: 'Fraunces', serif; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  /* Login */
+  .login-box {
+    max-width: 380px; margin: 12vh auto; background: var(--dark); color: var(--paper);
+    padding: 36px 28px; border-radius: 14px; box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  }
+  .login-box h2 { margin-bottom: 6px; font-size: 1.5rem; }
+  .login-box p { font-size: 0.85rem; color: rgba(241,235,220,0.7); margin-bottom: 22px; }
+  .login-box input {
+    width: 100%; padding: 11px 12px; margin-bottom: 14px; border-radius: var(--radius);
+    border: 1px solid rgba(241,235,220,0.25); background: rgba(241,235,220,0.08); color: var(--paper);
+  }
+  .btn {
+    background: var(--gold); color: var(--dark); border: none; padding: 11px 18px;
+    border-radius: var(--radius); font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+  .btn-full { width: 100%; }
+  .btn-ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+
+  /* Topbar */
+  header {
+    background: var(--dark); color: var(--paper); padding: 14px 24px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+  }
+  header .brand { font-family: 'Fraunces', serif; font-size: 1.2rem; }
+  header small { color: var(--gold); font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; display: block; }
+
+  /* Contenedor principal */
+  .wrap { max-width: 1140px; margin: 0 auto; padding: 24px 20px 60px; }
+  .toolbar {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+    gap: 12px; margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px solid var(--line);
+  }
+  .toolbar input[type="date"], .toolbar input[type="text"] {
+    padding: 9px 12px; border-radius: var(--radius); border: 1px solid var(--line);
+    background: #fff; font-family: inherit;
+  }
+
+  /* Resumen rápido */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .stat-card {
+    background: #fff; padding: 16px; border-radius: var(--radius); border: 1px solid var(--line);
+  }
+  .stat-card span { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); font-family: 'IBM Plex Mono', monospace; }
+  .stat-card strong { display: block; font-size: 1.7rem; color: var(--blue); margin-top: 4px; }
+
+  /* Tarjetas de reservación */
+  .grid-reservas { display: grid; gap: 14px; }
+  .res-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px;
+    display: grid; grid-template-columns: 90px 1.4fr 1fr 1fr; gap: 16px; align-items: center;
+  }
+  .hora-box {
+    background: var(--dark); color: var(--gold); text-align: center; padding: 10px 6px;
+    border-radius: var(--radius); font-family: 'IBM Plex Mono', monospace; font-weight: 500;
+  }
+  .hora-box small { display: block; color: var(--paper); font-size: 0.7rem; margin-top: 2px; }
+  .badge {
+    display: inline-block; font-size: 0.72rem; padding: 3px 8px; border-radius: 999px;
+    font-family: 'IBM Plex Mono', monospace; font-weight: 500; margin-left: 6px;
+  }
+  .badge-vip { background: rgba(217,161,60,0.2); color: #8A5E0B; border: 1px solid var(--gold); }
+  .badge-new { background: rgba(12,107,134,0.12); color: var(--blue); }
+  .nota-box { font-size: 0.82rem; color: var(--warn); margin-top: 4px; font-style: italic; }
+
+  select.control-inline, input.control-inline {
+    width: 100%; padding: 8px 10px; border-radius: var(--radius); border: 1px solid var(--line);
+    font-family: inherit; font-size: 0.88rem; background: var(--paper);
+  }
+  .hidden { display: none !important; }
+
+  @media (max-width: 820px) {
+    .res-card { grid-template-columns: 1fr; gap: 12px; }
+    .hora-box { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PANTALLA DE LOGIN -->
+<div id="loginView" class="login-box">
+  <h2>Puerto Escondido</h2>
+  <p>Acceso exclusivo para recepción y gerencia</p>
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Correo del restaurante" required>
+    <input type="password" id="password" placeholder="Contraseña" required>
+    <button type="submit" class="btn btn-full">Entrar al sistema</button>
+    <p id="loginError" style="color:#E5988A; margin-top:10px; font-size:0.8rem;"></p>
+  </form>
+</div>
+
+<!-- PANEL PRINCIPAL -->
+<div id="appView" class="hidden">
+  <header>
+    <div>
+      <span class="brand">Puerto Escondido — Piso y Recepción</span>
+      <small id="userEmail"></small>
+    </div>
+    <button class="btn btn-ghost" style="color:var(--paper); border-color:rgba(241,235,220,0.3)" id="logoutBtn">Cerrar sesión</button>
+  </header>
+
+  <div class="wrap">
+    <div class="toolbar">
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <label class="mono" style="font-size:0.8rem;">FECHA:</label>
+        <input type="date" id="filtroFecha">
+        <button class="btn" id="btnHoy">Hoy</button>
+        <button class="btn btn-ghost" id="btnTodas">Ver próximas</button>
+      </div>
+      <input type="text" id="buscador" placeholder="Buscar cliente, folio o teléfono...">
+    </div>
+
+    <div class="stats">
+      <div class="stat-card"><span>Reservaciones</span><strong id="statTotal">0</strong></div>
+      <div class="stat-card"><span>Comensales esperados</span><strong id="statPersonas">0</strong></div>
+      <div class="stat-card"><span>Clientes frecuentes</span><strong id="statFrecuentes">0</strong></div>
+    </div>
+
+    <div id="listaReservas" class="grid-reservas"></div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://qrtngsebgxfgtkzudfey.supabase.co';
+const SUPABASE_KEY = 'https://qrtngsebgxfgtkzudfey.supabase.co/rest/v1/';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const loginView = document.getElementById('loginView');
+const appView = document.getElementById('appView');
+const filtroFecha = document.getElementById('filtroFecha');
+const buscador = document.getElementById('buscador');
+let reservasCache = [];
+let modoTodas = false;
+
+function fechaLocalHoy() {
+  const d = new Date();
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+}
+filtroFecha.value = fechaLocalHoy();
+
+// Revisar sesión activa
+async function verificarSesion() {
+  const { data: { session } } = await db.auth.getSession();
+  if (session) {
+    loginView.classList.add('hidden');
+    appView.classList.remove('hidden');
+    document.getElementById('userEmail').textContent = session.user.email;
+    cargarReservaciones();
+    suscribirTiempoReal();
+  } else {
+    loginView.classList.remove('hidden');
+    appView.classList.add('hidden');
+  }
+}
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const { error } = await db.auth.signInWithPassword({ email, password });
+  if (error) {
+    document.getElementById('loginError').textContent = 'Correo o contraseña incorrectos.';
+  } else {
+    verificarSesion();
+  }
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await db.auth.signOut();
+  verificarSesion();
+});
+
+async function cargarReservaciones() {
+  let query = db
+    .from('reservaciones')
+    .select(`
+      id, folio, fecha, hora, personas, mesa_asignada, estado, notas_reserva,
+      clientes ( id, nombre, telefono, total_visitas, notas_permanentes )
+    `)
+    .order('fecha', { ascending: true })
+    .order('hora', { ascending: true });
+
+  if (!modoTodas && filtroFecha.value) {
+    query = query.eq('fecha', filtroFecha.value);
+  } else {
+    query = query.gte('fecha', fechaLocalHoy());
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    console.error(error);
+    return;
+  }
+  reservasCache = data || [];
+  renderizar();
+}
+
+function renderizar() {
+  const q = buscador.value.toLowerCase().trim();
+  const filtradas = reservasCache.filter(r => {
+    if (!q) return true;
+    return (
+      r.folio.toLowerCase().includes(q) ||
+      r.clientes?.nombre.toLowerCase().includes(q) ||
+      r.clientes?.telefono.includes(q)
+    );
+  });
+
+  document.getElementById('statTotal').textContent = filtradas.length;
+  document.getElementById('statPersonas').textContent = filtradas.reduce((acc, r) => acc + r.personas, 0);
+  document.getElementById('statFrecuentes').textContent = filtradas.filter(r => (r.clientes?.total_visitas || 1) > 1).length;
+
+  const cont = document.getElementById('listaReservas');
+  if (filtradas.length === 0) {
+    cont.innerHTML = '<p style="color:var(--ink-soft); padding:20px 0;">No hay reservaciones registradas para este filtro.</p>';
+    return;
+  }
+
+  cont.innerHTML = filtradas.map(r => {
+    const c = r.clientes || {};
+    const visitas = c.total_visitas || 1;
+    const badge = visitas > 1
+      ? `<span class="badge badge-vip">★ Frecuente (${visitas} visitas)</span>`
+      : `<span class="badge badge-new">Primera visita</span>`;
+
+    return `
+      <div class="res-card">
+        <div class="hora-box">
+          <div>${r.hora.slice(0,5)}</div>
+          <small>${r.fecha}</small>
+        </div>
+
+        <div>
+          <strong style="font-size:1.05rem;">${c.nombre || 'Cliente'}</strong> ${badge}
+          <div class="mono" style="font-size:0.8rem; color:var(--ink-soft); margin-top:4px;">
+            ${r.folio} · ${r.personas} pers. · Tel: <a href="tel:${c.telefono}">${c.telefono}</a>
+          </div>
+          ${r.notas_reserva ? `<div class="nota-box">Nota reserva: "${r.notas_reserva}"</div>` : ''}
+          ${c.notas_permanentes ? `<div class="nota-box" style="color:var(--blue)">Historial cliente: "${c.notas_permanentes}"</div>` : ''}
+        </div>
+
+        <div>
+          <label class="mono" style="font-size:0.68rem; color:var(--ink-soft);">MESA ASIGNADA</label>
+          <input class="control-inline" type="text" value="${r.mesa_asignada}"
+            placeholder="Ej. Mesa 4, Terraza..."
+            onchange="actualizarReserva('${r.id}', { mesa_asignada: this.value })">
+        </div>
+
+        <div>
+          <label class="mono" style="font-size:0.68rem; color:var(--ink-soft);">ESTATUS</label>
+          <select class="control-inline" onchange="actualizarReserva('${r.id}', { estado: this.value })">
+            <option value="pendiente"  ${r.estado==='pendiente'?'selected':''}>🟡 Pendiente</option>
+            <option value="confirmada" ${r.estado==='confirmada'?'selected':''}>🔵 Confirmada</option>
+            <option value="en_mesa"    ${r.estado==='en_mesa'?'selected':''}>🟢 Ya en mesa</option>
+            <option value="completada" ${r.estado==='completada'?'selected':''}>⚪ Completada</option>
+            <option value="cancelada"  ${r.estado==='cancelada'?'selected':''}>🔴 Cancelada / No llegó</option>
+          </select>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+window.actualizarReserva = async (id, cambios) => {
+  await db.from('reservaciones').update(cambios).eq('id', id);
+};
+
+// Actualización automática en tiempo real cuando cae una reserva nueva
+function suscribirTiempoReal() {
+  db.channel('cambios-reservas')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'reservaciones' }, () => {
+      cargarReservaciones();
+    })
+    .subscribe();
+}
+
+filtroFecha.addEventListener('change', () => { modoTodas = false; cargarReservaciones(); });
+document.getElementById('btnHoy').addEventListener('click', () => { modoTodas = false; filtroFecha.value = fechaLocalHoy(); cargarReservaciones(); });
+document.getElementById('btnTodas').addEventListener('click', () => { modoTodas = true; cargarReservaciones(); });
+buscador.addEventListener('input', renderizar);
+
+verificarSesion();
+</script>
+</body>
+</html>
