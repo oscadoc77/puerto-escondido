@@ -1,5 +1,5 @@
 const SUPABASE_URL = 'https://qrtngsebgxfgtkzudfey.supabase.co';
-const SUPABASE_KEY = 'https://qrtngsebgxfgtkzudfey.supabase.co/rest/v1/';
+const SUPABASE_KEY = 'sb_publishable_uYNvIEgQk1mpEMMBJkCB8w_d3BlPuuC';
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ---- horarios disponibles según el día seleccionado ----
