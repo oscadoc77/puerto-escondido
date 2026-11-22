@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puerto Escondido — Reservaciones</title>
+<link rel="stylesheet" href="css/estilos.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="intro" aria-hidden="true">
+  <span class="intro-title">Puerto Escondido</span>
+  <div class="intro-sea">
+    <svg viewBox="0 0 2880 80" preserveAspectRatio="none">
+      <path d="M0,70 C200,70 360,70 480,44 C560,18 640,8 720,8 C800,8 880,18 960,44 C1080,70 1240,70 1440,70 C1640,70 1800,70 1920,44 C2000,18 2080,8 2160,8 C2240,8 2320,18 2400,44 C2520,70 2680,70 2880,70 L2880,80 L0,80 Z"/>
+    </svg>
+  </div>
+  <div class="intro-pez-wrap"><img class="intro-pez" src="img/pez.png" alt=""></div>
+  <div class="intro-splash">
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+    <i></i><i></i>
+  </div>
+</div>
+<header class="site">
+  <div class="nav-inner">
+    <div class="brand">
+      <img src="img/foto1.png" alt="Puerto Escondido">
+      <span class="brand-text">Puerto Escondido<small>Cocina del mar</small></span>
+    </div>
+    <nav class="links">
+      <a href="#menu">Menú</a>
+      <a href="#ticket-form">Reservar</a>
+      <a href="#horario">Horario</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <a href="#ticket-form" class="nav-cta">Reservar mesa</a>
+  </div>
+</header>
+
+<section class="banner">
+  <div class="banner-grid">
+    <img src="img/foto2.jpg" alt="Mariscos gratinados">
+    <img src="img/foto3.jpg" alt="Costilla BBQ con elote asado">
+    <img src="img/foto4.jpg" alt="Tostada de atún y camarón">
+  </div>
+  <div class="banner-overlay">
+    <div class="banner-eyebrow">Bienvenidos</div>
+    <h1>Puerto Escondido,<br><em>cocina del mar</em></h1>
+    <p class="sub">Producto fresco, sacado del mar y servido en tu mesa. Reserva y ven a probarlo.</p>
+    <div class="banner-actions">
+      <a href="#ticket-form" class="banner-cta">Reservar mesa</a>
+      <a href="#menu" class="banner-cta ghost">Ver platillos</a>
+    </div>
+  </div>
+  <div class="scroll-cue">
+    <span>Desliza</span>
+    <div class="line"></div>
+  </div>
+</section>
+
+<section class="hero" id="reservar">
+  <div class="hero-copy">
+    <div class="eyebrow">Cocina del mar</div>
+    <h1>Una mesa frente al <em>mar</em>,<br>lista cuando tú lo estés.</h1>
+    <p class="lead">Reserva en menos de un minuto. Confirmamos al momento y guardamos tu mesa — sin llamadas, sin esperas.</p>
+
+    <div class="schedule" id="horario">
+      <div class="schedule-row">
+        <span class="day">Lunes a domingo</span>
+        <span class="hrs">11:00 – 19:00</span>
+      </div>
+    </div>
+
+    <div class="address-block" id="contacto">
+      <strong>Puerto Escondido · Cocina del Mar</strong>
+      Av. Chapultepec Sur 480, Col. Americana, Guadalajara, Jal.<br>
+      <a href="https://www.google.com/maps/place/Mariscos+Puerto+escondido/@20.6395033,-103.3818539,17z/data=!3m1!4b1!4m6!3m5!1s0x8428adc5520210e5:0xea52d44422a067dd!8m2!3d20.6395033!4d-103.379279!16s%2Fg%2F11kp73kz1m" target="_blank" rel="noopener" style="color:inherit">Ver en Google Maps</a><br>
+      <a href="tel:+523331622257" style="color:inherit; font-weight:600">+52 33 3162 2257</a> — hola@puertoescondido.mx<br>
+      <span style="font-style:italic">Llámanos ante cualquier duda!</span>
+      <div class="social">
+        <a href="https://www.instagram.com/mariscospuertoescondidogdl" target="_blank" rel="noopener" aria-label="Instagram de Mariscos Puerto Escondido">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          <span>Visítanos en nuestras redes</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ticket-wrap" id="ticket-form">
+    <div class="ticket">
+      <img class="ticket-watermark" src="img/foto1.png" alt="">
+      <div class="ticket-head">
+        <h2>Ficha de reservación</h2>
+        <span class="folio mono" id="folioPreview">#——</span>
+      </div>
+      <p class="ticket-sub">Llena tus datos — te confirmamos aquí mismo.</p>
+
+      <form id="resForm" novalidate>
+        <div class="field" id="field-nombre">
+          <label for="nombre">Nombre completo</label>
+          <input type="text" id="nombre" name="nombre" placeholder="Cómo te llamamos">
+          <div class="error-msg">Escribe tu nombre.</div>
+        </div>
+
+        <div class="row-2">
+          <div class="field" id="field-fecha">
+            <label for="fecha">Fecha</label>
+            <input type="date" id="fecha" name="fecha">
+            <div class="error-msg">Elige una fecha válida.</div>
+          </div>
+          <div class="field" id="field-hora">
+            <label for="hora">Hora</label>
+            <select id="hora" name="hora">
+              <option value="">Selecciona</option>
+            </select>
+            <div class="error-msg">Elige un horario.</div>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field" id="field-personas">
+            <label for="personas">Personas</label>
+            <select id="personas" name="personas">
+              <option value="">Selecciona</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option>
+              <option>5</option><option>6</option><option>7</option><option>8</option>
+            </select>
+            <div class="error-msg">¿Cuántos son?</div>
+          </div>
+          <div class="field" id="field-telefono">
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" name="telefono" placeholder="10 dígitos">
+            <div class="error-msg">Número de 10 dígitos.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="notas">Notas (opcional)</label>
+          <textarea id="notas" name="notas" rows="2" placeholder="Alergias, ocasión especial, etc."></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Confirmar reservación</button>
+        <p class="ticket-foot">Al reservar aceptas recibir un mensaje de confirmación.</p>
+      </form>
+
+      <div class="confirm" id="confirmBlock">
+        <div class="stamp"><span>Solicitud<br>lista</span></div>
+        <h3 id="confirmName">¡Gracias!</h3>
+        <p id="confirmDetails"></p>
+        <p class="folio-big" id="confirmFolio"></p>
+        <a id="waLink" class="submit-btn wa-btn" target="_blank" rel="noopener">Enviar por WhatsApp para confirmar</a>
+        <button class="new-res" id="newReservation">Hacer otra reservación</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="menu-wrap" id="menu">
+  <div class="menu-head">
+    <div>
+      <div class="eyebrow">Lo que sale de la cocina</div>
+      <h2>Carta completa</h2>
+    </div>
+    <p>Precios en pesos mexicanos. Todo se prepara al momento.</p>
+  </div>
+  <nav class="m-jump" id="menuJump"></nav>
+  <div id="menuLista"></div>
+  <p class="m-legal">El consumo de productos crudos o parcialmente crudos es responsabilidad de quien los consume.<br>Nuestros precios no incluyen servicio.</p>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div><strong>Puerto Escondido</strong> Cocina del Mar · Guadalajara</div>
+    <div>© 2026 Puerto Escondido. Todos los derechos reservados.</div>
+  </div>
+</footer>
+
+
+<script src="js/reservas.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/intro.js"></script>
+</body>
+</html>
