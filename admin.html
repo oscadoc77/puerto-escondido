@@ -260,7 +260,7 @@ async function cargarReservaciones() {
   let query = db
     .from('reservaciones')
     .select(`
-      id, folio, fecha, hora, personas, mesa_asignada, estado, notas_reserva,
+      id, folio, fecha, hora, personas, mesa_asignada, estado, notas_reserva, nombre_reserva,
       clientes ( id, nombre, telefono, total_visitas, notas_permanentes )
     `)
     .order('fecha', { ascending: true })
@@ -317,10 +317,12 @@ function renderizar() {
         </div>
 
         <div>
-          <strong style="font-size:1.05rem;">${esc(c.nombre || 'Cliente')}</strong> ${badge}
+          <strong style="font-size:1.05rem;">${esc(r.nombre_reserva || c.nombre || 'Cliente')}</strong> ${badge}
+          ${r.nombre_reserva && c.nombre && r.nombre_reserva !== c.nombre ? `<span class="mono" style="font-size:0.75rem; color:var(--ink-soft);"> · ficha: ${esc(c.nombre)}</span>` : ''}
           <div class="mono" style="font-size:0.8rem; color:var(--ink-soft); margin-top:4px;">
             ${esc(r.folio)} · ${esc(r.personas)} pers. · Tel: <a href="tel:${esc(c.telefono)}">${esc(c.telefono)}</a>
           </div>
+          <button class="btn btn-ghost" style="padding:4px 10px; font-size:0.78rem; margin-top:6px;" data-unir="${esc(c.id)}" data-nombre="${esc(c.nombre || '')}">Unir esta ficha con otra</button>
           ${r.notas_reserva ? `<div class="nota-box">Nota reserva: "${esc(r.notas_reserva)}"</div>` : ''}
           ${c.notas_permanentes ? `<div class="nota-box" style="color:var(--blue)">Historial cliente: "${esc(c.notas_permanentes)}"</div>` : ''}
         </div>
@@ -354,6 +356,33 @@ async function actualizarReserva(id, cambios) {
     cargarReservaciones();
   }
 }
+
+// Unir dos fichas de cliente (la que se borra se pasa a la que se conserva)
+document.getElementById('listaReservas').addEventListener('click', async (e) => {
+  const btn = e.target.closest('[data-unir]');
+  if (!btn) return;
+  const origenId = btn.dataset.unir;
+  const origenNombre = btn.dataset.nombre;
+
+  const tel = prompt(`Unir la ficha de "${origenNombre}" con otra.\n\nEscribe el teléfono de la ficha que SE CONSERVA (10 dígitos):`);
+  if (!tel) return;
+  const telLimpio = tel.replace(/\D/g, '');
+  if (!/^\d{10}$/.test(telLimpio)) { alert('El teléfono debe tener 10 dígitos.'); return; }
+
+  const { data: destino, error: errBusqueda } = await db
+    .from('clientes').select('id, nombre, telefono, total_visitas')
+    .eq('telefono', telLimpio).maybeSingle();
+  if (errBusqueda || !destino) { alert('No encontré una ficha con ese teléfono.'); return; }
+  if (destino.id === origenId) { alert('Esa es la misma ficha.'); return; }
+
+  const ok = confirm(`Se pasarán todas las reservaciones de "${origenNombre}" a la ficha "${destino.nombre}" (${destino.telefono}).\n\nLa ficha de "${origenNombre}" se borrará. ¿Continuar?`);
+  if (!ok) return;
+
+  const { error } = await db.rpc('unir_clientes', { p_origen: origenId, p_destino: destino.id });
+  if (error) { alert('No se pudo unir las fichas: ' + error.message); return; }
+  cargarReservaciones();
+  cargarGraficas();
+});
 
 // Un solo listener para todos los controles de la lista
 document.getElementById('listaReservas').addEventListener('change', (e) => {
