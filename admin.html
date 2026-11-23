@@ -166,11 +166,11 @@
 
   <div class="wrap">
     <nav class="tabs">
-      <button class="tab active" data-tab="tabEstadisticas">Estadísticas</button>
-      <button class="tab" data-tab="tabReservaciones">Reservaciones</button>
+      <button class="tab" data-tab="tabEstadisticas">Estadísticas</button>
+      <button class="tab active" data-tab="tabReservaciones">Reservaciones</button>
     </nav>
 
-    <section id="tabEstadisticas" class="tab-panel">
+    <section id="tabEstadisticas" class="tab-panel hidden">
       <div class="stats">
         <div class="stat-card"><span>Reservaciones</span><strong id="statTotal">0</strong></div>
         <div class="stat-card"><span>Comensales esperados</span><strong id="statPersonas">0</strong></div>
@@ -184,7 +184,7 @@
       </div>
     </section>
 
-    <section id="tabReservaciones" class="tab-panel hidden">
+    <section id="tabReservaciones" class="tab-panel">
       <div class="toolbar">
         <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
           <label class="mono" style="font-size:0.8rem;">FECHA:</label>
