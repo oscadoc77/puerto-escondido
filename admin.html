@@ -135,6 +135,9 @@
   .chart-card { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
   .chart-card h3 { font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem; font-weight: 500; color: var(--ink-soft); margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.05em; }
   .chart-box { position: relative; height: 220px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+  .tab { background: #fff; border: 1px solid var(--line); color: var(--ink); padding: 10px 18px; border-radius: 999px; font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; }
+  .tab.active { background: var(--dark); color: var(--paper); border-color: var(--dark); }
 </style>
 </head>
 <body>
@@ -162,29 +165,37 @@
   </header>
 
   <div class="wrap">
-    <div class="toolbar">
-      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-        <label class="mono" style="font-size:0.8rem;">FECHA:</label>
-        <input type="date" id="filtroFecha">
-        <button class="btn" id="btnHoy">Hoy</button>
-        <button class="btn btn-ghost" id="btnTodas">Ver próximas</button>
+    <nav class="tabs">
+      <button class="tab active" data-tab="tabEstadisticas">Estadísticas</button>
+      <button class="tab" data-tab="tabReservaciones">Reservaciones</button>
+    </nav>
+
+    <section id="tabEstadisticas" class="tab-panel">
+      <div class="stats">
+        <div class="stat-card"><span>Reservaciones</span><strong id="statTotal">0</strong></div>
+        <div class="stat-card"><span>Comensales esperados</span><strong id="statPersonas">0</strong></div>
+        <div class="stat-card"><span>Clientes frecuentes</span><strong id="statFrecuentes">0</strong></div>
       </div>
-      <input type="text" id="buscador" placeholder="Buscar cliente, folio o teléfono...">
-    </div>
+      <div class="charts">
+        <div class="chart-card"><h3>Reservaciones por día (±14 días)</h3><div class="chart-box"><canvas id="chartDias"></canvas></div></div>
+        <div class="chart-card"><h3>Comensales por hora (±14 días)</h3><div class="chart-box"><canvas id="chartTurnos"></canvas></div></div>
+        <div class="chart-card"><h3>Estatus de reservaciones</h3><div class="chart-box"><canvas id="chartEstados"></canvas></div></div>
+        <div class="chart-card"><h3>Clientes nuevos vs frecuentes</h3><div class="chart-box"><canvas id="chartClientes"></canvas></div></div>
+      </div>
+    </section>
 
-    <div class="stats">
-      <div class="stat-card"><span>Reservaciones</span><strong id="statTotal">0</strong></div>
-      <div class="stat-card"><span>Comensales esperados</span><strong id="statPersonas">0</strong></div>
-      <div class="stat-card"><span>Clientes frecuentes</span><strong id="statFrecuentes">0</strong></div>
-    </div>
-    <div class="charts">
-      <div class="chart-card"><h3>Reservaciones por día (±14 días)</h3><div class="chart-box"><canvas id="chartDias"></canvas></div></div>
-      <div class="chart-card"><h3>Comensales por hora (±14 días)</h3><div class="chart-box"><canvas id="chartTurnos"></canvas></div></div>
-      <div class="chart-card"><h3>Estatus de reservaciones</h3><div class="chart-box"><canvas id="chartEstados"></canvas></div></div>
-      <div class="chart-card"><h3>Clientes nuevos vs frecuentes</h3><div class="chart-box"><canvas id="chartClientes"></canvas></div></div>
-    </div>
-
-    <div id="listaReservas" class="grid-reservas"></div>
+    <section id="tabReservaciones" class="tab-panel hidden">
+      <div class="toolbar">
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <label class="mono" style="font-size:0.8rem;">FECHA:</label>
+          <input type="date" id="filtroFecha">
+          <button class="btn" id="btnHoy">Hoy</button>
+          <button class="btn btn-ghost" id="btnTodas">Ver próximas</button>
+        </div>
+        <input type="text" id="buscador" placeholder="Buscar cliente, folio o teléfono...">
+      </div>
+      <div id="listaReservas" class="grid-reservas"></div>
+    </section>
   </div>
 </div>
 
@@ -471,6 +482,16 @@ async function cargarGraficas() {
     options: opcionesDona()
   });
 }
+
+// ===== PESTAÑAS =====
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('hidden', p.id !== btn.dataset.tab));
+    // Las gráficas dibujadas en una pestaña oculta necesitan recalcular su tamaño
+    Object.values(instanciasGraficas).forEach(c => c.resize());
+  });
+});
 </script>
 </body>
 </html>
