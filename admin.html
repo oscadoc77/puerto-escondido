@@ -354,7 +354,9 @@ async function actualizarReserva(id, cambios) {
   if (error) {
     alert('No se pudo guardar el cambio. Revisa la conexión e inténtalo de nuevo.');
     cargarReservaciones();
+    return;
   }
+  cargarGraficas();
 }
 
 // Unir dos fichas de cliente (la que se borra se pasa a la que se conserva)
@@ -388,6 +390,9 @@ document.getElementById('listaReservas').addEventListener('click', async (e) => 
 document.getElementById('listaReservas').addEventListener('change', (e) => {
   const el = e.target;
   if (!el.dataset || !el.dataset.id) return;
+  // Actualiza la pantalla al instante; si el guardado falla, actualizarReserva recarga los datos reales
+  const r = reservasCache.find(x => x.id === el.dataset.id);
+  if (r) { r[el.dataset.campo] = el.value; renderizar(); }
   actualizarReserva(el.dataset.id, { [el.dataset.campo]: el.value });
 });
 
