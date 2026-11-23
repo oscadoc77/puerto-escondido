@@ -6,6 +6,7 @@
 <title>Panel de Control — Puerto Escondido</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
     --paper: #F1EBDC;
@@ -130,6 +131,10 @@
     .hora-box { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; }
     .hora-box small { margin-top: 0; }
   }
+  .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .chart-card { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+  .chart-card h3 { font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem; font-weight: 500; color: var(--ink-soft); margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .chart-box { position: relative; height: 220px; }
 </style>
 </head>
 <body>
@@ -172,6 +177,12 @@
       <div class="stat-card"><span>Comensales esperados</span><strong id="statPersonas">0</strong></div>
       <div class="stat-card"><span>Clientes frecuentes</span><strong id="statFrecuentes">0</strong></div>
     </div>
+    <div class="charts">
+      <div class="chart-card"><h3>Reservaciones por día (±14 días)</h3><div class="chart-box"><canvas id="chartDias"></canvas></div></div>
+      <div class="chart-card"><h3>Comensales por hora (±14 días)</h3><div class="chart-box"><canvas id="chartTurnos"></canvas></div></div>
+      <div class="chart-card"><h3>Estatus de reservaciones</h3><div class="chart-box"><canvas id="chartEstados"></canvas></div></div>
+      <div class="chart-card"><h3>Clientes nuevos vs frecuentes</h3><div class="chart-box"><canvas id="chartClientes"></canvas></div></div>
+    </div>
 
     <div id="listaReservas" class="grid-reservas"></div>
   </div>
@@ -208,6 +219,7 @@ async function verificarSesion() {
     appView.classList.remove('hidden');
     document.getElementById('userEmail').textContent = session.user.email;
     cargarReservaciones();
+    cargarGraficas();
     suscribirTiempoReal();
   } else {
     loginView.classList.remove('hidden');
@@ -346,6 +358,7 @@ function suscribirTiempoReal() {
   canalTiempoReal = db.channel('cambios-reservas')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'reservaciones' }, () => {
       cargarReservaciones();
+      cargarGraficas();
     })
     .subscribe();
 }
@@ -356,6 +369,108 @@ document.getElementById('btnTodas').addEventListener('click', () => { modoTodas 
 buscador.addEventListener('input', renderizar);
 
 verificarSesion();
+
+// ===== GRÁFICAS =====
+const COLORES = { azul: '#0C6B86', dorado: '#D9A13C', oscuro: '#083A4B', verde: '#2E7D5B', rojo: '#B5503B', gris: '#8A9BA1' };
+const ESTADOS = [
+  { id: 'pendiente', label: 'Pendiente', color: COLORES.dorado },
+  { id: 'confirmada', label: 'Confirmada', color: COLORES.azul },
+  { id: 'en_mesa', label: 'En mesa', color: COLORES.oscuro },
+  { id: 'completada', label: 'Completada', color: COLORES.verde },
+  { id: 'cancelada', label: 'Cancelada', color: COLORES.rojo }
+];
+const instanciasGraficas = {};
+
+function sumarDias(iso, n) {
+  const d = new Date(iso + 'T00:00:00');
+  d.setDate(d.getDate() + n);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function opcionesBarras() {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+  };
+}
+
+function opcionesDona() {
+  return { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } };
+}
+
+function dibujarGrafica(id, config) {
+  if (typeof Chart === 'undefined') return;
+  if (instanciasGraficas[id]) {
+    instanciasGraficas[id].data = config.data;
+    instanciasGraficas[id].update();
+  } else {
+    instanciasGraficas[id] = new Chart(document.getElementById(id), config);
+  }
+}
+
+async function cargarGraficas() {
+  const hoy = fechaLocalHoy();
+  const { data, error } = await db
+    .from('reservaciones')
+    .select('fecha, hora, personas, estado, cliente_id, clientes ( total_visitas )')
+    .gte('fecha', sumarDias(hoy, -14))
+    .lte('fecha', sumarDias(hoy, 14));
+  if (error) { console.error(error); return; }
+  const filas = data || [];
+
+  // 1) Reservaciones por día
+  const etiquetasDias = [];
+  const conteoDias = [];
+  for (let i = -14; i <= 14; i++) {
+    const f = sumarDias(hoy, i);
+    etiquetasDias.push(f.slice(8) + '/' + f.slice(5, 7));
+    conteoDias.push(filas.filter(r => r.fecha === f).length);
+  }
+  dibujarGrafica('chartDias', {
+    type: 'bar',
+    data: { labels: etiquetasDias, datasets: [{ label: 'Reservaciones', data: conteoDias, backgroundColor: COLORES.azul, borderRadius: 4 }] },
+    options: opcionesBarras()
+  });
+
+  // 2) Comensales por hora
+  const porHora = {};
+  filas.forEach(r => {
+    const h = r.hora.slice(0, 2) + ':00';
+    porHora[h] = (porHora[h] || 0) + r.personas;
+  });
+  const horas = Object.keys(porHora).sort();
+  dibujarGrafica('chartTurnos', {
+    type: 'bar',
+    data: { labels: horas, datasets: [{ label: 'Comensales', data: horas.map(h => porHora[h]), backgroundColor: COLORES.dorado, borderRadius: 4 }] },
+    options: opcionesBarras()
+  });
+
+  // 3) Estatus de las reservaciones
+  dibujarGrafica('chartEstados', {
+    type: 'doughnut',
+    data: {
+      labels: ESTADOS.map(e => e.label),
+      datasets: [{ data: ESTADOS.map(e => filas.filter(r => r.estado === e.id).length), backgroundColor: ESTADOS.map(e => e.color), borderWidth: 0 }]
+    },
+    options: opcionesDona()
+  });
+
+  // 4) Clientes únicos: primera visita vs frecuentes (2 o más visitas completadas)
+  const clientes = new Map();
+  filas.forEach(r => { if (r.cliente_id) clientes.set(r.cliente_id, r.clientes?.total_visitas || 1); });
+  let nuevos = 0, frecuentes = 0;
+  clientes.forEach(v => { if (v > 1) frecuentes++; else nuevos++; });
+  dibujarGrafica('chartClientes', {
+    type: 'doughnut',
+    data: {
+      labels: ['Primera visita', 'Frecuentes'],
+      datasets: [{ data: [nuevos, frecuentes], backgroundColor: [COLORES.gris, COLORES.verde], borderWidth: 0 }]
+    },
+    options: opcionesDona()
+  });
+}
 </script>
 </body>
 </html>
