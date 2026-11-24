@@ -754,3 +754,6 @@
   .ped-carrito{ position:static; }
 }
 
+
+/* Botón Pedidos en el menú: mismo estilo que Reservar mesa */
+.links a.nav-cta{ color:var(--paper); }
