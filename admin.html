@@ -123,6 +123,10 @@
     #btnTodas { grid-column: 2; width: 100%; }
     #buscador { width: 100%; min-width: 0; }
 
+    .toolbar > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .toolbar > div > label, #filtroFecha, #filtroEstado { grid-column: 1 / span 2; width: 100%; }
+    #btnHoy { grid-column: 1; width: 100%; }
+    #btnTodas { grid-column: 2; width: 100%; }
     .tabs { flex-wrap: wrap; }
     .tab { padding: 10px 14px; font-size: 0.74rem; }
     .btn { min-height: 44px; }
