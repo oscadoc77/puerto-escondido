@@ -757,3 +757,6 @@
 
 /* Botón Pedidos en el menú: mismo estilo que Reservar mesa */
 .links a.nav-cta{ color:var(--paper); }
+
+/* Pedidos y Reservar mesa en el mismo grupo a la derecha */
+.nav-actions{ display:flex; align-items:center; gap:10px; }
