@@ -15,6 +15,10 @@ create table if not exists menu_items (
 );
 
 alter table menu_items enable row level security;
+-- Permisos de tabla (sin esto la API responde 401 aunque existan las políticas)
+grant select on menu_items to anon, authenticated;
+grant select, insert, update, delete on menu_items to authenticated;
+grant execute on function public.crear_pedido(varchar, varchar, jsonb, text) to anon, authenticated;
 
 drop policy if exists "Publico ve menu" on menu_items;
 create policy "Publico ve menu" on menu_items for select to anon, authenticated
