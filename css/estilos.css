@@ -734,12 +734,13 @@
 .nav-actual{ background:transparent !important; color:var(--blue) !important; box-shadow:inset 0 0 0 1.5px var(--blue); pointer-events:none; }
 
 .ped-info-bloque{ display:flex; flex-wrap:wrap; gap:8px 24px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin-top:24px; font-size:0.92rem; color:#2E3B41; }
-.ped-tools{ position:sticky; top:90px; z-index:5; background:var(--paper); padding:14px 0 10px; margin-top:20px; display:grid; gap:10px; border-bottom:1px solid var(--line); }
+.ped-izq{ min-width:0; }
+.ped-tools{ position:sticky; top:130px; z-index:5; background:var(--paper); padding:14px 0 10px; margin-top:20px; display:grid; gap:10px; border-bottom:1px solid var(--line); }
 .ped-tools input{ font:inherit; min-height:44px; padding:10px 14px; border:1px solid var(--line); border-radius:10px; background:#fff; }
 .ped-chips{ display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; }
 .ped-chips a{ white-space:nowrap; min-height:40px; padding:8px 14px; border-radius:999px; border:1px solid var(--blue); color:var(--blue); text-decoration:none; font-size:0.9rem; display:inline-flex; align-items:center; }
 .ped-chips a:hover{ background:var(--blue); color:var(--paper); }
-.ped-grupo{ scroll-margin-top:170px; margin-top:28px; }
+.ped-grupo{ scroll-margin-top:260px; margin-top:28px; }
 .ped-grupo h3{ font-size:clamp(1.5rem,2.6vw,2rem); border-bottom:1px solid var(--line); padding-bottom:10px; margin:0 0 6px; }
 .ped-seccion{ margin-top:14px; }
 .ped-seccion h4{ font-size:1.05rem; color:var(--brick); margin:0 0 2px; }
@@ -758,7 +759,7 @@
 .ped-wa{ display:inline-flex; align-items:center; min-height:44px; padding:0 16px; border-radius:var(--radius); border:1px solid var(--blue); color:var(--blue); text-decoration:none; font-size:0.9rem; }
 
 .ped-layout{ display:grid; grid-template-columns:1fr 340px; gap:32px; align-items:start; margin-top:12px; }
-.ped-carrito{ position:sticky; top:110px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px; }
+.ped-carrito{ position:sticky; top:130px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px; }
 .ped-carrito h2{ font-size:1.4rem; margin:0 0 10px; }
 .ped-vacio{ color:#4A5A60; font-size:0.95rem; margin:0; }
 .ped-linea{ display:flex; justify-content:space-between; gap:10px; font-size:0.92rem; padding:4px 0; }
@@ -784,6 +785,6 @@
   .ped-barra{ display:flex; }
   .ped-page{ padding-bottom:96px; }
   .ped-vars{ justify-content:flex-start; width:100%; }
-  .ped-tools{ top:0; }
+  .ped-tools{ position:static; }
   .ped-grupo{ scroll-margin-top:120px; }
 }
