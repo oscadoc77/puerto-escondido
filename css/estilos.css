@@ -728,35 +728,62 @@
 .social-titulo{ margin-top:18px; font-family:'Work Sans', sans-serif; font-weight:600; color:var(--ink-soft); }
 
 /* ===== PEDIDOS PARA RECOGER ===== */
-.ped-layout{ display:grid; grid-template-columns:1fr 340px; gap:32px; align-items:start; }
-.ped-grupo{ font-size:clamp(1.5rem,2.6vw,2rem); border-bottom:1px solid var(--line); padding-bottom:12px; margin:40px 0 16px; }
-.ped-seccion h4{ font-size:1.05rem; color:var(--brick); margin:18px 0 4px; }
-.ped-item{ display:flex; justify-content:space-between; align-items:center; gap:14px; padding:10px 0; border-bottom:1px dashed var(--line); }
-.ped-nombre{ font-weight:500; }
-.ped-desc{ font-size:0.8rem; color:var(--ink-soft); font-style:italic; }
-.ped-der{ display:flex; align-items:center; gap:12px; flex-shrink:0; }
-.ped-precio{ font-family:'IBM Plex Mono', monospace; color:var(--blue); font-weight:500; font-size:0.92rem; }
-.ped-consultar{ font-size:0.8rem; color:var(--ink-soft); font-style:italic; }
-.ped-qty{ display:flex; align-items:center; gap:8px; }
-.ped-qty button{ width:30px; height:30px; border-radius:50%; border:1px solid var(--blue); background:var(--paper); color:var(--blue); font-size:1rem; cursor:pointer; }
-.ped-qty span{ min-width:20px; text-align:center; font-family:'IBM Plex Mono', monospace; }
-.ped-carrito{ position:sticky; top:90px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px; }
-.ped-carrito h3{ font-size:1.4rem; margin:0 0 12px; }
-.ped-linea{ display:flex; justify-content:space-between; gap:10px; font-size:0.9rem; padding:4px 0; }
+[hidden]{ display:none !important; }
+.nav-actions{ display:flex; align-items:center; gap:10px; }
+.links a.nav-cta{ color:var(--paper); }
+.nav-actual{ background:transparent !important; color:var(--blue) !important; box-shadow:inset 0 0 0 1.5px var(--blue); pointer-events:none; }
+
+.ped-info-bloque{ display:flex; flex-wrap:wrap; gap:8px 24px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin-top:24px; font-size:0.92rem; color:#2E3B41; }
+.ped-tools{ position:sticky; top:90px; z-index:5; background:var(--paper); padding:14px 0 10px; margin-top:20px; display:grid; gap:10px; border-bottom:1px solid var(--line); }
+.ped-tools input{ font:inherit; min-height:44px; padding:10px 14px; border:1px solid var(--line); border-radius:10px; background:#fff; }
+.ped-chips{ display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; }
+.ped-chips a{ white-space:nowrap; min-height:40px; padding:8px 14px; border-radius:999px; border:1px solid var(--blue); color:var(--blue); text-decoration:none; font-size:0.9rem; display:inline-flex; align-items:center; }
+.ped-chips a:hover{ background:var(--blue); color:var(--paper); }
+.ped-grupo{ scroll-margin-top:170px; margin-top:28px; }
+.ped-grupo h3{ font-size:clamp(1.5rem,2.6vw,2rem); border-bottom:1px solid var(--line); padding-bottom:10px; margin:0 0 6px; }
+.ped-seccion{ margin-top:14px; }
+.ped-seccion h4{ font-size:1.05rem; color:var(--brick); margin:0 0 2px; }
+.ped-platillo{ display:flex; justify-content:space-between; align-items:center; gap:12px 16px; flex-wrap:wrap; padding:12px 0; border-bottom:1px dashed var(--line); }
+.ped-info{ flex:1 1 220px; min-width:0; }
+.ped-nombre{ font-weight:500; margin:0; }
+.ped-desc{ font-size:0.9rem; color:#4A5A60; font-style:italic; margin:2px 0 0; }
+.ped-vars{ display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
+.ped-var{ display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--line); border-radius:10px; padding:4px 6px 4px 10px; }
+.ped-talla{ font-family:'IBM Plex Mono', monospace; font-size:0.8rem; color:var(--brick); }
+.ped-precio{ font-family:'IBM Plex Mono', monospace; color:var(--blue); font-weight:500; font-size:0.92rem; white-space:nowrap; }
+.ped-qty{ display:flex; align-items:center; gap:4px; }
+.ped-qty button{ width:44px; height:44px; border-radius:50%; border:1px solid var(--blue); background:var(--paper); color:var(--blue); font-size:1.2rem; cursor:pointer; }
+.ped-qty button:disabled{ opacity:.35; cursor:default; border-color:var(--line); color:var(--ink-soft); }
+.ped-qty output{ min-width:24px; text-align:center; font-family:'IBM Plex Mono', monospace; font-weight:500; }
+.ped-wa{ display:inline-flex; align-items:center; min-height:44px; padding:0 16px; border-radius:var(--radius); border:1px solid var(--blue); color:var(--blue); text-decoration:none; font-size:0.9rem; }
+
+.ped-layout{ display:grid; grid-template-columns:1fr 340px; gap:32px; align-items:start; margin-top:12px; }
+.ped-carrito{ position:sticky; top:110px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px; }
+.ped-carrito h2{ font-size:1.4rem; margin:0 0 10px; }
+.ped-vacio{ color:#4A5A60; font-size:0.95rem; margin:0; }
+.ped-linea{ display:flex; justify-content:space-between; gap:10px; font-size:0.92rem; padding:4px 0; }
 .ped-total{ display:flex; justify-content:space-between; border-top:1px solid var(--line); margin:12px 0; padding-top:12px; font-size:1.1rem; }
-#pedidoForm{ display:grid; gap:10px; }
-#pedidoForm input, #pedidoForm textarea{ font:inherit; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--paper); }
-.btn-pedido{ background:var(--blue); color:var(--paper); border:0; padding:12px; border-radius:var(--radius); font-weight:600; cursor:pointer; }
-.btn-pedido:disabled{ opacity:0.6; cursor:default; }
-.ped-msg{ font-size:0.9rem; margin:4px 0 0; }
+#pedidoForm{ display:grid; gap:12px; }
+.ped-campo{ display:grid; gap:4px; }
+.ped-campo label{ font-size:0.9rem; font-weight:500; }
+.ped-campo input, .ped-campo textarea{ font:inherit; min-height:44px; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--paper); }
+.ped-error{ color:#A23B2A; font-size:0.85rem; min-height:1em; margin:0; }
+.ped-nota-pago{ font-size:0.9rem; color:#2E3B41; margin:0; }
+.btn-pedido{ min-height:48px; background:var(--blue); color:var(--paper); border:0; padding:12px; border-radius:var(--radius); font-weight:600; font-size:1rem; cursor:pointer; }
+.btn-pedido:disabled{ background:#8FA3AA; cursor:not-allowed; }
+.ped-msg{ font-size:0.95rem; margin:0; }
+.ped-msg.ok{ background:#E6F2EC; color:#1F5C41; padding:12px; border-radius:10px; }
+.ped-msg.error{ background:#F8E6E1; color:#7A2A1C; padding:12px; border-radius:10px; }
+
+.ped-barra{ display:none; position:fixed; left:0; right:0; bottom:0; z-index:20; background:var(--blue); color:var(--paper); padding:12px 16px; justify-content:space-between; align-items:center; gap:12px; box-shadow:0 -4px 16px rgba(0,0,0,.15); }
+.ped-barra a{ background:var(--paper); color:var(--blue); min-height:44px; padding:10px 18px; border-radius:var(--radius); text-decoration:none; font-weight:600; display:inline-flex; align-items:center; }
+
 @media (max-width:900px){
   .ped-layout{ grid-template-columns:1fr; }
   .ped-carrito{ position:static; }
+  .ped-barra{ display:flex; }
+  .ped-page{ padding-bottom:96px; }
+  .ped-vars{ justify-content:flex-start; width:100%; }
+  .ped-tools{ top:0; }
+  .ped-grupo{ scroll-margin-top:120px; }
 }
-
-
-/* Botón Pedidos en el menú: mismo estilo que Reservar mesa */
-.links a.nav-cta{ color:var(--paper); }
-
-/* Pedidos y Reservar mesa en el mismo grupo a la derecha */
-.nav-actions{ display:flex; align-items:center; gap:10px; }

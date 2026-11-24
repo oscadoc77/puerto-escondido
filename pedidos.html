@@ -21,37 +21,66 @@
       <a href="index.html#contacto">Contacto</a>
     </nav>
     <div class="nav-actions">
-      <a href="pedidos.html" class="nav-cta" aria-current="page">Hacer pedido</a>
+      <a href="pedidos.html" class="nav-cta nav-actual" aria-current="page">Hacer pedido</a>
       <a href="index.html#ticket-form" class="nav-cta">Reservar mesa</a>
     </div>
   </div>
 </header>
 
-<main class="menu-wrap">
+<main class="menu-wrap ped-page">
   <div class="menu-head">
     <div>
       <div class="eyebrow">Para llevar</div>
       <h1>Haz tu pedido</h1>
     </div>
-    <p>Elige lo que quieras y paga en sucursal al recoger.</p>
+    <p>Elige lo que quieras, paga en sucursal y recógelo.</p>
   </div>
+
+  <div class="ped-info-bloque">
+    <span><strong>Recoges en:</strong> Av. Miguel López de Legaspi 1934, Guadalajara</span>
+    <span><strong>Horario:</strong> lunes a domingo, 11:00 – 19:00</span>
+    <span><strong>Preparación:</strong> aprox. 20 min</span>
+  </div>
+
+  <div class="ped-tools">
+    <input id="buscar" type="search" placeholder="Buscar platillo" aria-label="Buscar platillo" disabled>
+    <nav id="chips" class="ped-chips" aria-label="Categorías"></nav>
+  </div>
+
   <div class="ped-layout">
-    <div id="pedidosMenu"><p>Cargando menú...</p></div>
-    <aside class="ped-carrito">
+    <div id="pedidosMenu"><p class="ped-msg">Cargando menú...</p></div>
+
+    <aside class="ped-carrito" id="tuPedido">
       <h2>Tu pedido</h2>
-      <div id="carritoLineas" class="mono">Aún no has elegido nada.</div>
+      <div id="carritoLineas"></div>
       <div class="ped-total"><span>Total</span><strong id="carritoTotal">$0</strong></div>
-      <form id="pedidoForm">
-        <input id="pedNombre" placeholder="Tu nombre" maxlength="100" required>
-        <input id="pedTelefono" placeholder="Teléfono (10 dígitos)" inputmode="numeric" maxlength="14" required>
-        <textarea id="pedNotas" placeholder="Notas (opcional)" maxlength="300" rows="2"></textarea>
-        <p class="mono" style="font-size:0.78rem; color:var(--ink-soft); margin:0;">Pagas en sucursal al recoger tu pedido.</p>
-        <button type="submit" class="btn-pedido" id="btnPedir">Confirmar pedido</button>
+      <form id="pedidoForm" novalidate>
+        <div class="ped-campo">
+          <label for="pedNombre">Nombre</label>
+          <input id="pedNombre" maxlength="100" autocomplete="name" placeholder="Ej. Ana López">
+          <p class="ped-error" id="errNombre" role="alert"></p>
+        </div>
+        <div class="ped-campo">
+          <label for="pedTelefono">Teléfono (10 dígitos)</label>
+          <input id="pedTelefono" inputmode="numeric" autocomplete="tel" maxlength="14" placeholder="33 1234 5678">
+          <p class="ped-error" id="errTelefono" role="alert"></p>
+        </div>
+        <div class="ped-campo">
+          <label for="pedNotas">Notas (opcional)</label>
+          <textarea id="pedNotas" maxlength="300" rows="2" placeholder="Ej. sin cebolla"></textarea>
+        </div>
+        <p class="ped-nota-pago">Pagas en sucursal al recoger. No se cobra en línea.</p>
+        <button type="submit" class="btn-pedido" id="btnPedir" disabled>Agrega platillos para continuar</button>
         <p id="pedMensaje" class="ped-msg" role="status"></p>
       </form>
     </aside>
   </div>
 </main>
+
+<div class="ped-barra" id="pedBarra">
+  <span id="barraTexto">0 artículos · $0</span>
+  <a href="#tuPedido">Ver pedido</a>
+</div>
 
 <footer>
   <div class="footer-inner">
