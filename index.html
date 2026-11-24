@@ -30,7 +30,7 @@
     </div>
     <nav class="links">
       <a href="#menu">Menú</a>
-      <a href="#pedidos">Pedidos</a>
+      <a href="pedidos.html">Pedidos</a>
       <a href="#ticket-form">Reservar</a>
       <a href="#horario">Horario</a>
       <a href="#contacto">Contacto</a>
@@ -183,32 +183,6 @@
   <p class="m-legal">El consumo de productos crudos o parcialmente crudos es responsabilidad de quien los consume.<br>Nuestros precios no incluyen servicio.</p>
 </section>
 
-<section class="menu-wrap" id="pedidos">
-  <div class="menu-head">
-    <div>
-      <div class="eyebrow">Para llevar</div>
-      <h2>Haz tu pedido</h2>
-    </div>
-    <p>Elige lo que quieras y paga en sucursal al recoger.</p>
-  </div>
-  <div class="ped-layout">
-    <div id="pedidosMenu"><p>Cargando menú...</p></div>
-    <aside class="ped-carrito">
-      <h3>Tu pedido</h3>
-      <div id="carritoLineas" class="mono">Aún no has elegido nada.</div>
-      <div class="ped-total"><span>Total</span><strong id="carritoTotal">$0</strong></div>
-      <form id="pedidoForm">
-        <input id="pedNombre" placeholder="Tu nombre" maxlength="100" required>
-        <input id="pedTelefono" placeholder="Teléfono (10 dígitos)" inputmode="numeric" maxlength="14" required>
-        <textarea id="pedNotas" placeholder="Notas (opcional)" maxlength="300" rows="2"></textarea>
-        <p class="mono" style="font-size:0.78rem; color:var(--ink-soft); margin:0;">Pagas en sucursal al recoger tu pedido.</p>
-        <button type="submit" class="btn-pedido" id="btnPedir">Confirmar pedido</button>
-        <p id="pedMensaje" class="ped-msg" role="status"></p>
-      </form>
-    </aside>
-  </div>
-</section>
-
 <footer>
   <div class="footer-inner">
     <div><strong>Puerto Escondido</strong> Cocina del Mar · Guadalajara</div>
@@ -219,7 +193,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/reservas.js"></script>
 <script src="js/menu.js"></script>
-<script src="js/pedidos.js"></script>
 <script src="js/intro.js"></script>
 </body>
 </html>

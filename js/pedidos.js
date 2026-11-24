@@ -1,5 +1,8 @@
 // ===== PEDIDOS PARA RECOGER EN SUCURSAL =====
-// Usa el cliente `db` de reservas.js. El total lo calcula el servidor (función crear_pedido).
+// Página pedidos.html. El total lo calcula el servidor (función crear_pedido).
+const SUPABASE_URL = 'https://qrtngsebgxfgtkzudfey.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_uYNvIEgQk1mpEMMBJkCB8w_d3BlPuuC';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let catalogo = [];   // platillos activos desde menu_items
 let carrito = {};    // id -> { id, nombre, variante, unidad, precio, cantidad }
@@ -73,6 +76,7 @@ async function cargarMenuPedidos() {
     .order('orden');
   if (error || !data) {
     document.getElementById('pedidosMenu').innerHTML = '<p>No se pudo cargar el menú. Intenta más tarde.</p>';
+    console.error(error);
     return;
   }
   catalogo = data;

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puerto Escondido — Haz tu pedido</title>
+<link rel="stylesheet" href="css/estilos.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+<header class="site">
+  <div class="nav-inner">
+    <a class="brand" href="index.html" style="text-decoration:none;color:inherit">
+      <img src="img/foto1.png" alt="Puerto Escondido">
+      <span class="brand-text">Puerto Escondido<small>Cocina del mar</small></span>
+    </a>
+    <nav class="links">
+      <a href="index.html#menu">Menú</a>
+      <a href="pedidos.html" aria-current="page">Pedidos</a>
+      <a href="index.html#ticket-form">Reservar</a>
+      <a href="index.html#contacto">Contacto</a>
+    </nav>
+    <a href="index.html#ticket-form" class="nav-cta">Reservar mesa</a>
+  </div>
+</header>
+
+<main class="menu-wrap">
+  <div class="menu-head">
+    <div>
+      <div class="eyebrow">Para llevar</div>
+      <h1>Haz tu pedido</h1>
+    </div>
+    <p>Elige lo que quieras y paga en sucursal al recoger.</p>
+  </div>
+  <div class="ped-layout">
+    <div id="pedidosMenu"><p>Cargando menú...</p></div>
+    <aside class="ped-carrito">
+      <h2>Tu pedido</h2>
+      <div id="carritoLineas" class="mono">Aún no has elegido nada.</div>
+      <div class="ped-total"><span>Total</span><strong id="carritoTotal">$0</strong></div>
+      <form id="pedidoForm">
+        <input id="pedNombre" placeholder="Tu nombre" maxlength="100" required>
+        <input id="pedTelefono" placeholder="Teléfono (10 dígitos)" inputmode="numeric" maxlength="14" required>
+        <textarea id="pedNotas" placeholder="Notas (opcional)" maxlength="300" rows="2"></textarea>
+        <p class="mono" style="font-size:0.78rem; color:var(--ink-soft); margin:0;">Pagas en sucursal al recoger tu pedido.</p>
+        <button type="submit" class="btn-pedido" id="btnPedir">Confirmar pedido</button>
+        <p id="pedMensaje" class="ped-msg" role="status"></p>
+      </form>
+    </aside>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div><strong>Puerto Escondido</strong> Cocina del Mar · Guadalajara</div>
+    <div>© 2026 Puerto Escondido. Todos los derechos reservados.</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/pedidos.js"></script>
+</body>
+</html>
