@@ -168,6 +168,7 @@
     <nav class="tabs">
       <button class="tab" data-tab="tabEstadisticas">Estadísticas</button>
       <button class="tab active" data-tab="tabReservaciones">Reservaciones</button>
+      <button class="tab" data-tab="tabPedidos">Pedidos</button>
     </nav>
 
     <section id="tabEstadisticas" class="tab-panel hidden">
@@ -195,6 +196,9 @@
         <input type="text" id="buscador" placeholder="Buscar cliente, folio o teléfono...">
       </div>
       <div id="listaReservas" class="grid-reservas"></div>
+    </section>
+    <section id="tabPedidos" class="tab-panel hidden">
+      <div id="listaPedidos" class="grid-reservas"></div>
     </section>
   </div>
 </div>
@@ -524,7 +528,67 @@ document.querySelectorAll('.tab').forEach(btn => {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('hidden', p.id !== btn.dataset.tab));
     // Las gráficas dibujadas en una pestaña oculta necesitan recalcular su tamaño
     Object.values(instanciasGraficas).forEach(c => c.resize());
+    if (btn.dataset.tab === 'tabPedidos') cargarPedidos();
   });
+});
+
+// ===== PEDIDOS PARA RECOGER =====
+const ESTADOS_PEDIDO = [
+  { id: 'nuevo', label: 'Nuevo' },
+  { id: 'pagado', label: 'Pagado' },
+  { id: 'entregado', label: 'Entregado' },
+  { id: 'cancelado', label: 'Cancelado' }
+];
+
+async function cargarPedidos() {
+  const cont = document.getElementById('listaPedidos');
+  const { data, error } = await db
+    .from('pedidos')
+    .select('id, folio, detalle, total, estado, notas, creado_en, clientes ( nombre, telefono )')
+    .order('creado_en', { ascending: false })
+    .limit(100);
+  if (error) { cont.innerHTML = '<p class="mono">No se pudieron cargar los pedidos.</p>'; return; }
+  renderPedidos(data || []);
+}
+
+function renderPedidos(lista) {
+  const cont = document.getElementById('listaPedidos');
+  if (!lista.length) { cont.innerHTML = '<p class="mono">Todavía no hay pedidos.</p>'; return; }
+  cont.innerHTML = lista.map(p => {
+    const c = p.clientes || {};
+    const items = (p.detalle || []).map(d =>
+      `<li>${esc(d.cantidad)} × ${esc(d.nombre)}${d.variante ? ' (' + esc(d.variante) + ')' : ''}${d.unidad ? ' · ' + esc(d.unidad) : ''} — $${esc(d.subtotal)}</li>`
+    ).join('');
+    const opciones = ESTADOS_PEDIDO.map(e =>
+      `<option value="${e.id}" ${p.estado === e.id ? 'selected' : ''}>${e.label}</option>`).join('');
+    const fecha = new Date(p.creado_en).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
+    return `
+      <div class="res-card">
+        <div class="hora-box">
+          <div>$${esc(p.total)}</div>
+          <small>${esc(p.folio)}</small>
+        </div>
+        <div>
+          <strong style="font-size:1.05rem;">${esc(c.nombre || 'Cliente')}</strong>
+          <div class="mono" style="font-size:0.8rem; color:var(--ink-soft); margin-top:4px;">
+            Tel: <a href="tel:${esc(c.telefono)}">${esc(c.telefono)}</a> · ${esc(fecha)} · Pago en sucursal
+          </div>
+          <ul style="margin:8px 0 0; padding-left:18px; font-size:0.9rem;">${items}</ul>
+          ${p.notas ? `<div class="nota-box">Notas: "${esc(p.notas)}"</div>` : ''}
+        </div>
+        <div>
+          <label class="mono" style="font-size:0.72rem; color:var(--ink-soft);">ESTADO</label>
+          <select class="control-inline" data-pedido="${esc(p.id)}">${opciones}</select>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+document.getElementById('listaPedidos').addEventListener('change', async (e) => {
+  const id = e.target.dataset.pedido;
+  if (!id) return;
+  const { error } = await db.from('pedidos').update({ estado: e.target.value }).eq('id', id);
+  if (error) { alert('No se pudo guardar el estado del pedido.'); cargarPedidos(); }
 });
 </script>
 </body>

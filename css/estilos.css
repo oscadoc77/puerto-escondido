@@ -726,3 +726,31 @@
   }
 }
 .social-titulo{ margin-top:18px; font-family:'Work Sans', sans-serif; font-weight:600; color:var(--ink-soft); }
+
+/* ===== PEDIDOS PARA RECOGER ===== */
+.ped-layout{ display:grid; grid-template-columns:1fr 340px; gap:32px; align-items:start; }
+.ped-grupo{ font-size:clamp(1.5rem,2.6vw,2rem); border-bottom:1px solid var(--line); padding-bottom:12px; margin:40px 0 16px; }
+.ped-seccion h4{ font-size:1.05rem; color:var(--brick); margin:18px 0 4px; }
+.ped-item{ display:flex; justify-content:space-between; align-items:center; gap:14px; padding:10px 0; border-bottom:1px dashed var(--line); }
+.ped-nombre{ font-weight:500; }
+.ped-desc{ font-size:0.8rem; color:var(--ink-soft); font-style:italic; }
+.ped-der{ display:flex; align-items:center; gap:12px; flex-shrink:0; }
+.ped-precio{ font-family:'IBM Plex Mono', monospace; color:var(--blue); font-weight:500; font-size:0.92rem; }
+.ped-consultar{ font-size:0.8rem; color:var(--ink-soft); font-style:italic; }
+.ped-qty{ display:flex; align-items:center; gap:8px; }
+.ped-qty button{ width:30px; height:30px; border-radius:50%; border:1px solid var(--blue); background:var(--paper); color:var(--blue); font-size:1rem; cursor:pointer; }
+.ped-qty span{ min-width:20px; text-align:center; font-family:'IBM Plex Mono', monospace; }
+.ped-carrito{ position:sticky; top:90px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px; }
+.ped-carrito h3{ font-size:1.4rem; margin:0 0 12px; }
+.ped-linea{ display:flex; justify-content:space-between; gap:10px; font-size:0.9rem; padding:4px 0; }
+.ped-total{ display:flex; justify-content:space-between; border-top:1px solid var(--line); margin:12px 0; padding-top:12px; font-size:1.1rem; }
+#pedidoForm{ display:grid; gap:10px; }
+#pedidoForm input, #pedidoForm textarea{ font:inherit; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--paper); }
+.btn-pedido{ background:var(--blue); color:var(--paper); border:0; padding:12px; border-radius:var(--radius); font-weight:600; cursor:pointer; }
+.btn-pedido:disabled{ opacity:0.6; cursor:default; }
+.ped-msg{ font-size:0.9rem; margin:4px 0 0; }
+@media (max-width:900px){
+  .ped-layout{ grid-template-columns:1fr; }
+  .ped-carrito{ position:static; }
+}
+
