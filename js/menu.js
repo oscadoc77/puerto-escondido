@@ -153,7 +153,7 @@ function fila(it){
   const precios = it.slice(1).filter(x => x[0] !== '~');
   let derecha;
   if (precios[0] === 'CONSULTAR') {
-    derecha = `<a class="m-wa" target="_blank" rel="noopener" href="${linkWA('Hola, quisiera consultar el precio de: ' + nombre + ' (Puerto Escondido)')}">Consultar por WhatsApp</a>`;
+    derecha = `<a class="m-wa" href="tel:+${MENU_WA}">Llamar al restaurante</a>`;
   } else {
     derecha = '<div class="m-precios">' + precios.map(p => {
       const m = p.match(/^([A-Z]+) (.*)$/);

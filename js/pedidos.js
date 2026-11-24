@@ -41,7 +41,7 @@ function agrupar() {
 function htmlPlatillo(p) {
   const soloConsulta = p.variantes.every(v => v.precio == null);
   const controles = soloConsulta
-    ? `<a class="ped-wa" target="_blank" rel="noopener" href="${waLink('Hola, quisiera consultar el precio de: ' + p.nombre + ' (Puerto Escondido)')}">Consultar precio por WhatsApp</a>`
+    ? `<a class="ped-wa" href="tel:+${WA_NUM}">Llamar al restaurante</a>`
     : p.variantes.filter(v => v.precio != null).map(v => {
         const cant = carrito[v.id] ? carrito[v.id].cantidad : 0;
         const etiqueta = [p.nombre, v.variante].filter(Boolean).join(' ');
