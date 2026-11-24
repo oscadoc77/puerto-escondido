@@ -788,3 +788,17 @@
   .ped-tools{ position:static; }
   .ped-grupo{ scroll-margin-top:120px; }
 }
+
+/* ===== AJUSTES DE AUDITORÍA (portada) ===== */
+.banner-eyebrow{ font-size:.85rem !important; font-weight:600; color:#F4C96B !important; text-shadow:0 1px 8px rgba(0,0,0,.6); }
+.banner-overlay h1, .banner-overlay .sub{ text-shadow:0 2px 16px rgba(0,0,0,.55); }
+.banner-overlay h1 em{ color:#8ED9E8 !important; }
+.banner-overlay .sub{ color:#F5EFE1 !important; }
+.field label{ color:#D9E9EC !important; }
+.field input::placeholder, .field textarea::placeholder{ color:#A9C2C9 !important; opacity:1; }
+.fecha-atajos{ display:flex; gap:8px; margin-top:6px; }
+.fecha-atajo{ min-height:40px; padding:6px 14px; border-radius:999px; border:1px solid var(--gold); background:transparent; color:var(--gold); font:inherit; font-size:.85rem; cursor:pointer; }
+.fecha-atajo:hover{ background:var(--gold); color:#083A4B; }
+.m-leyenda{ font-family:'IBM Plex Mono', monospace; font-size:.78rem; color:var(--ink-soft); margin:0 0 16px; }
+.m-jump a.activo{ background:var(--brick); color:var(--paper); }
+.m-wa{ min-height:40px; display:inline-flex; align-items:center; }

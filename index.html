@@ -123,6 +123,10 @@
           <div class="field" id="field-fecha">
             <label for="fecha">Fecha</label>
             <input type="date" id="fecha" name="fecha">
+            <div class="fecha-atajos">
+              <button type="button" class="fecha-atajo" data-dia="0">Hoy</button>
+              <button type="button" class="fecha-atajo" data-dia="1">Mañana</button>
+            </div>
             <div class="error-msg">Elige una fecha válida.</div>
           </div>
           <div class="field" id="field-hora">
@@ -180,6 +184,7 @@
     </div>
     <p>Precios en pesos mexicanos. Todo se prepara al momento.</p>
   </div>
+  <p class="m-leyenda">CH chico · M mediano · G grande · TOST tostada · ORDEN porción · /kg por kilo</p>
   <nav class="m-jump" id="menuJump"></nav>
   <div id="menuLista"></div>
   <p class="m-legal">El consumo de productos crudos o parcialmente crudos es responsabilidad de quien los consume.<br>Nuestros precios no incluyen servicio.</p>

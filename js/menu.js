@@ -153,7 +153,7 @@ function fila(it){
   const precios = it.slice(1).filter(x => x[0] !== '~');
   let derecha;
   if (precios[0] === 'CONSULTAR') {
-    derecha = `<a class="m-wa" target="_blank" rel="noopener" href="${linkWA('Hola, quisiera consultar el precio de: ' + nombre + ' (Puerto Escondido)')}">Consultar</a>`;
+    derecha = `<a class="m-wa" target="_blank" rel="noopener" href="${linkWA('Hola, quisiera consultar el precio de: ' + nombre + ' (Puerto Escondido)')}">Consultar por WhatsApp</a>`;
   } else {
     derecha = '<div class="m-precios">' + precios.map(p => {
       const m = p.match(/^([A-Z]+) (.*)$/);
@@ -177,3 +177,15 @@ MENU.forEach(g => {
   lista.insertAdjacentHTML('beforeend',
     `<div class="m-grupo" id="${id}"><h2>${g.g}</h2><div class="m-cards">${cats}</div></div>`);
 });
+
+// Resalta en el menú de categorías la sección que se está viendo
+const enlacesJump = [...document.querySelectorAll('#menuJump a')];
+const seccionesMenu = enlacesJump.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+const observadorMenu = new IntersectionObserver(entradas => {
+  entradas.forEach(en => {
+    if (en.isIntersecting) {
+      enlacesJump.forEach(a => a.classList.toggle('activo', a.getAttribute('href') === '#' + en.target.id));
+    }
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+seccionesMenu.forEach(sec => observadorMenu.observe(sec));

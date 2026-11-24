@@ -136,3 +136,11 @@ document.getElementById('newReservation').addEventListener('click', () => {
   confirmBlock.classList.remove('show');
   form.classList.remove('hidden');
 });
+
+// Atajos de fecha: Hoy / Mañana
+document.querySelectorAll('.fecha-atajo').forEach(b => b.addEventListener('click', () => {
+  const d = new Date();
+  d.setDate(d.getDate() + Number(b.dataset.dia));
+  fechaInput.value = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+  fechaInput.dispatchEvent(new Event('change'));
+}));
