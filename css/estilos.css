@@ -819,3 +819,12 @@
   .ped-talla { font-size: 0.85rem; }
 }
 
+/* ===== ENCABEZADO EN CELULARES ANGOSTOS ===== */
+@media (max-width: 560px) {
+  .nav-inner { gap: 8px; padding-left: 12px; padding-right: 12px; }
+  .brand-text { display: none; }
+  .brand img { height: 40px; }
+  .nav-actions { gap: 6px; }
+  .nav-cta { padding: 8px 10px !important; font-size: 0.78rem !important; min-height: 40px !important; }
+}
+
