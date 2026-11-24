@@ -828,3 +828,8 @@
   .nav-cta { padding: 8px 10px !important; font-size: 0.78rem !important; min-height: 40px !important; }
 }
 
+/* En celular, el encabezado solo muestra "Hacer pedido"; "Reservar mesa" queda en la imagen principal */
+@media (max-width: 768px) {
+  .nav-actions a[href="#ticket-form"], .nav-actions a[href="index.html#ticket-form"] { display: none !important; }
+}
+
