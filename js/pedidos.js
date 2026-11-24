@@ -188,5 +188,14 @@ async function cargarMenu() {
   renderMenu();
 }
 
+// Altura real del encabezado fijo, para que la barra de búsqueda y el carrito queden justo debajo
+function ajustarSticky() {
+  const h = document.querySelector('header.site');
+  const alto = h ? Math.ceil(h.getBoundingClientRect().height) : 90;
+  document.documentElement.style.setProperty('--hdr', (alto + 8) + 'px');
+}
+window.addEventListener('resize', ajustarSticky);
+ajustarSticky();
+
 actualizarResumen();
 cargarMenu();
