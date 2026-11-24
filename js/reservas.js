@@ -102,18 +102,6 @@ form.addEventListener('submit', async (e) => {
     return;
   }
 
-  // Respaldo opcional por WhatsApp
-  const texto = [
-    'Hola, acabo de registrar mi reservación en la web de Puerto Escondido.',
-    `Folio: ${folioActual}`,
-    `Nombre: ${nombre}`,
-    `Fecha: ${fecha}`,
-    `Hora: ${hora}`,
-    `Personas: ${personas}`
-  ].join('\n');
-  document.getElementById('waLink').href =
-    `https://wa.me/${WHATSAPP_NEGOCIO}?text=${encodeURIComponent(texto)}`;
-
   const primerNombre = nombre.split(' ')[0];
   // La función ya no indica si el cliente vino antes (no revela datos de otros clientes)
   document.getElementById('confirmName').textContent =

@@ -832,4 +832,4 @@
 @media (max-width: 768px) {
   .nav-actions a[href="#ticket-form"], .nav-actions a[href="index.html#ticket-form"] { display: none !important; }
 }
-
+.llamar-msg{ color:rgba(239,230,210,0.85); font-size:0.95rem; margin-top:18px; }
